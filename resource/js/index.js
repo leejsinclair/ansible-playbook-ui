@@ -18,7 +18,7 @@ $('.main-tab').on('click', function(e) {
 });
 
 $('#btn-check').on('click', function(e){
-    var filename = $('#ymlname').data('name');
+    var filename = $('#ymlname').html();
     var tag = $('input[name=tagSelection]:checked').val();
     addtab(filename);
     running = filename;
@@ -31,7 +31,7 @@ $('#btn-check').on('click', function(e){
 });
 
 $('#btn-execute').on('click', function(e){
-    var filename = $('#ymlname').data('name');
+    var filename = $('#ymlname').html();
     var tag = $('input[name=tagSelection]:checked').val();
     addtab(filename);
     running = filename;
@@ -44,7 +44,7 @@ $('#btn-execute').on('click', function(e){
 });
 
 $('#btn-delete').on('click', function(e){
-    var filename = $('#ymlname').data('name');
+    var filename = $('#ymlname').html();
     $.get('/delfile/' + filename, function() {
         location.href = '/';
     });
