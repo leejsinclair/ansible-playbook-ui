@@ -22,6 +22,14 @@ Ansible.prototype.run = function(filename) {
 
     shell.on('close', con);
 };
+Ansible.prototype.check = function(filename) {
+    const shell = spawn('ansible-playbook', [ '--check', filename]);
+    shell.stdout.on('data', con);
+
+    shell.stderr.on('data', con);
+
+    shell.on('close', con);
+};
 Ansible.prototype.addListener = function(newhandler) {
     proto.handler = newhandler;
 }

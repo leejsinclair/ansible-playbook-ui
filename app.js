@@ -10,6 +10,7 @@ var getfile = require('./routes/getfile');
 var setfile = require('./routes/setfile');
 var delfile = require('./routes/delfile');
 var runfile = require('./routes/runfile');
+var checkfile = require('./routes/checkfile');
 var stream = require('./routes/stream');
 
 var hbs = require('hbs');
@@ -34,6 +35,7 @@ app.use('/getfile', getfile);
 app.use('/setfile', setfile);
 app.use('/delfile', delfile);
 app.use('/runfile', runfile);
+app.use('/checkfile', checkfile);
 app.use('/stream', stream);
 
 // catch 404 and forward to error handler

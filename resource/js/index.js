@@ -22,6 +22,15 @@ $('.run.green').on('click', function(e) {
 
     });
 })
+$('.check.blue').on('click', function(e) {
+    var filename = $(this).parents('li.dd2-item').data('id');
+    addtab(filename)
+    running = filename;
+    localStorage.setItem(recomma(filename), '');
+    $.get('/checkfile/' + filename, function() {
+        //location.href = '/';
+    });
+})
 $('.trash.red').on('click', function(e) {
     var filename = $(this).parents('li.dd2-item').data('id');
     $.get('/delfile/' + filename, function() {
