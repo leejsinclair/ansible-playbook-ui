@@ -6,9 +6,15 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/*', function(req, res, next) {
-    var baseUrl = req.url;
+    var params = req.params;
+    var query = req.query;
 
-    ansible.check(__dirname + '/../playbook'+baseUrl);
+    var file = params[0];
+    // var tag = query.tag;
+
+    console.log( file );
+
+    ansible.check(__dirname + '/../playbook/'+file, query);
     res.send('ok');
 });
 

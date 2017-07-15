@@ -4,71 +4,89 @@ $('.dd-handle a').on('mousedown', function(e){
 });
 
 var $editor = $('#editor');
-$('.pencil.blue').on('click', function(e) {
-    var filename = $(this).parents('li.dd2-item').data('id');
+
+$('.main-tab').on('click', function(e) {
+    var filename = $(this).data('name');
     $.get('/getfile/' + filename, function(data) {
-
-        setText(data);
-    })
+        // setText(data);
+        var doc = parseYML(data);
+        var tags = extractTags(doc);
+        addTagCheckboxes( tags );
+        console.log( tags );
+    });
     setFilename(filename);
-})
-$('.run.green').on('click', function(e) {
-    var filename = $(this).parents('li.dd2-item').data('id');
-    addtab(filename)
-    running = filename;
-    localStorage.setItem(recomma(filename), '');
-    $.get('/runfile/' + filename, function() {
-        //location.href = '/';
+});
 
-    });
-})
-$('.check.blue').on('click', function(e) {
-    var filename = $(this).parents('li.dd2-item').data('id');
-    addtab(filename)
+$('#btn-check').on('click', function(e){
+    var filename = $('#ymlname').data('name');
+    var tag = $('input[name=tagSelection]:checked').val();
+    addtab(filename);
     running = filename;
     localStorage.setItem(recomma(filename), '');
-    $.get('/checkfile/' + filename, function() {
+
+    var url = '/checkfile/' + filename + ( tag?'?tag='+tag:'' );
+    $.get(url, function() {
         //location.href = '/';
     });
-})
-$('.trash.red').on('click', function(e) {
-    var filename = $(this).parents('li.dd2-item').data('id');
+});
+
+$('#btn-execute').on('click', function(e){
+    var filename = $('#ymlname').data('name');
+    var tag = $('input[name=tagSelection]:checked').val();
+    addtab(filename);
+    running = filename;
+    localStorage.setItem(recomma(filename), '');
+
+    var url = '/runfile/' + filename + ( tag?'?tag='+tag:'' );
+    $.get(url, function() {
+        //location.href = '/';
+    });
+});
+
+$('#btn-delete').on('click', function(e){
+    var filename = $('#ymlname').data('name');
     $.get('/delfile/' + filename, function() {
         location.href = '/';
     });
-})
-$('#editreset').on('click', function(e) {
-    setFilename()
-    setText()
-})
-$('#editsave').on('click', function(e) {
-    var filename = $editor.find('input').val();
-    if (!filename ) {
-        alert('File Name require');
-        return;
+});
+
+function addTagCheckboxes( tags ) {
+    $editor.find('#tags').html('');
+    for (i = 0; i < tags.length; i++) {
+        var radioBtn = $('<li class="list-group-item"><div class="radio"><label><input type="radio" name="tagSelection" value="'+tags[i]+'" />'+tags[i]+'</label></div></li>');
+        radioBtn.appendTo('#tags');
     }
-    var body = $editor.find('textarea').val();
-    $.post('/setfile/' + filename, {'body':body})
-        .done(function(){
-            location.href = '/';
-        })
-})
+}
+
 function setFilename(text) {
     var base = text || '';
-    $editor.find('input').val(base);
+    $editor.find('#ymlname').html(base).attr('data-name',base);
 }
-function setText(text) {
-    var base = text||'- hosts: localhost\n'+
-        '  vars:\n'+
-        '  tasks:\n';
-    $editor.find('textarea').val(base);
+
+function parseYML(text) {
+    var doc = jsyaml.load(text);
+    return doc;
+}
+
+function extractTags( doc ) {
+    // Extract tags
+    var tags = [];
+    doc.forEach(function(d) {
+        if( d.tasks ) {
+            var tasks = d.tasks;
+            tasks.forEach(function(t){
+                tags = _.unique(tags.concat( (t.tags||[])));
+            });
+        }
+        
+    });
+    return tags;
 }
 var running = '';
 var sse = new EventSource('/stream');
 
 sse.addEventListener('message', function(e) {
-
-    console.log(e.data);
+    // console.log(e.data);
     var refilename = recomma(running);
     $('#li' + refilename).click();
     var content = localStorage.getItem(refilename) + '<p>'+e.data + '</p>';
@@ -76,7 +94,7 @@ sse.addEventListener('message', function(e) {
 
     $('#content' + refilename).html(content);
 }, false);
-setText();
+
 function recomma(text) {
     return text.replace('.', '_')
 }
@@ -91,7 +109,7 @@ function addtab(filename) {
 
     var head = $('<li id="li'+refilename+'">')
         .append($('<a data-toggle="tab" href="#content' + refilename+'">')
-            .append('<i class="pink ace-icon fa fa-tachometer bigger-110"></i>' + filename))
+        .append('<i class="pink ace-icon fa fa-tachometer bigger-110"></i>' + filename))
     $filehead.append(head);
 
     var content = $('<div id="content'+refilename+'" class="tab-pane">');

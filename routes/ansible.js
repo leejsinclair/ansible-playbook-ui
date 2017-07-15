@@ -14,7 +14,9 @@ function con(data) {
     proto.handler(''+data);
     console.log(''+data);
 }
-Ansible.prototype.run = function(filename) {
+Ansible.prototype.run = function(filename, options) {
+    var params = [filename];
+    params = extractParams( params, options );
     const shell = spawn('ansible-playbook', [filename]);
     shell.stdout.on('data', con);
 
@@ -22,8 +24,11 @@ Ansible.prototype.run = function(filename) {
 
     shell.on('close', con);
 };
-Ansible.prototype.check = function(filename) {
-    const shell = spawn('ansible-playbook', [ '--check', filename]);
+Ansible.prototype.check = function(filename, options) {
+    var params = ['--check', filename];
+    params = extractParams( params, options );
+
+    const shell = spawn('ansible-playbook', params );
     shell.stdout.on('data', con);
 
     shell.stderr.on('data', con);
@@ -32,4 +37,12 @@ Ansible.prototype.check = function(filename) {
 };
 Ansible.prototype.addListener = function(newhandler) {
     proto.handler = newhandler;
+}
+
+function extractParams( params, options) {
+    if( options && options.tag ) {
+        params = [ '--tags', '"' + options.tag + '"' ].concat( params );
+    }
+
+    return params;
 }
