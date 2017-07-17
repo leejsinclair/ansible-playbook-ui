@@ -34,26 +34,34 @@ $('#btn-execute').on('click', function(e){
     var filename = $('#ymlname').html();
     var tag = $('input[name=tagSelection]:checked').val();
     addtab(filename);
-    running = filename;
-    localStorage.setItem(recomma(filename), '');
 
-    var url = '/runfile/' + filename + ( tag?'?tag='+tag:'' );
-    $.get(url, function() {
-        //location.href = '/';
-    });
+    var proceed = confirm("Proceed with EXECUTE?");
+    if( proceed ) {
+        running = filename;
+        localStorage.setItem(recomma(filename), '');
+
+        var url = '/runfile/' + filename + ( tag?'?tag='+tag:'' );
+        $.get(url, function() {
+            //location.href = '/';
+        });
+    }
 });
 
 $('#btn-delete').on('click', function(e){
     var filename = $('#ymlname').html();
-    $.get('/delfile/' + filename, function() {
-        location.href = '/';
-    });
+
+    var proceed = confirm("Proceed with DELETE?");
+    if( proceed ) {
+        $.get('/delfile/' + filename, function() {
+            location.href = '/';
+        });
+    }
 });
 
 function addTagCheckboxes( tags ) {
     $editor.find('#tags').html('');
     for (i = 0; i < tags.length; i++) {
-        var radioBtn = $('<li class="list-group-item"><div class="radio"><label><input type="radio" name="tagSelection" value="'+tags[i]+'" />'+tags[i]+'</label></div></li>');
+        var radioBtn = $('<li class="list-group-item radio"><label><input type="radio" name="tagSelection" value="'+tags[i]+'" />'+tags[i]+'</label></li>');
         radioBtn.appendTo('#tags');
     }
 }
@@ -75,7 +83,7 @@ function extractTags( doc ) {
         if( d.tasks ) {
             var tasks = d.tasks;
             tasks.forEach(function(t){
-                tags = _.unique(tags.concat( (t.tags||[])));
+                tags = _.unique(tags.concat( (t.tags||[]))).sort();
             });
         }
         

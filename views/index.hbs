@@ -92,20 +92,21 @@
                 <div class="dd" id="mainyml">
                     <div id="editor" class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title" id="ymlname"></h3>
+                            <h3 class="panel-title"><span id="ymlname"></span> (TAGS)</h3>
                         </div>
 
-                        <div class="panel-body">
-                            <p>Tags</p>
-                        </div>
-
-                        <ul class="list-group" id="tags">
+                        <ul class="list-group" id="tags" style="margin:0">
                         </ul>
                         <div class="panel-footer">
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-info" id="btn-check"><i class="fa fa-question-circle"></i> Check</button>
+                                {{!-- <button type="button" class="btn btn-info" id="btn-check"><i class="fa fa-question-circle"></i> Check</button> --}}
                                 <button type="button" class="btn btn-success" id="btn-execute"><i class="fa fa-play-circle"></i> Execute</button>
                                 <button type="button" class="btn btn-danger pull-right" id="btn-delete">Delete</button>
+                            </div>
+                            <div class="btn-group pull-right" role="group">
+                                 <button type="button" class="btn btn-info" id="btn-check"><i class="fa fa-question-circle"></i> Check</button> 
+                                {{!-- <button type="button" class="btn btn-success" id="btn-execute"><i class="fa fa-play-circle"></i> Execute</button>
+                                <button type="button" class="btn btn-danger pull-right" id="btn-delete">Delete</button> --}}
                             </div>
                         </div>
                     </div>
