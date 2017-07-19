@@ -1,0 +1,9 @@
+#editor .list-group {
+    max-height: calc( 100vh - 160px );
+    overflow: scroll;
+}
+
+#mainyml {
+    width: 100%;
+    max-width: 100%;
+}
