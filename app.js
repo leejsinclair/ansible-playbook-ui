@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var getfile = require('./routes/getfile');
+var listFiles = require('./routes/listFiles');
 var setfile = require('./routes/setfile');
 var delfile = require('./routes/delfile');
 var runfile = require('./routes/runfile');
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/resource')));
 
 app.use('/', index);
+app.use('/files', listFiles);
 app.use('/getfile', getfile);
 app.use('/setfile', setfile);
 app.use('/delfile', delfile);

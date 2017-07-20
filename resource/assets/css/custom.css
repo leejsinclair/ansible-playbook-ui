@@ -7,3 +7,18 @@
     width: 100%;
     max-width: 100%;
 }
+
+li.danger a {
+    color: #d9534f !important;
+}
+
+.nav.nav-pills.nav-stacked {
+    margin: 0;
+}
+
+.nav.nav-pills.nav-stacked .active,
+.nav.nav-pills.nav-stacked .active a {
+    background-color: #eee;
+    border-radius: 0;
+    color: #333;
+}

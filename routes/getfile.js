@@ -6,7 +6,7 @@ var router = express.Router();
 router.get('/*', function(req, res, next) {
     var baseUrl = req.url;
     var file = fs.readFileSync(__dirname + '/../playbook'+baseUrl, 'utf8');
-    res.send(file);
+    res.send( { 'content': file } );
 });
 
 module.exports = router;
