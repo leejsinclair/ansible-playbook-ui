@@ -105,15 +105,20 @@ app.controller('ansibleCtrl', [ '$scope', '$resource', function($scope, $resourc
         }
 
         function checkLineItem( str, lineItems ) {
-            var finalLineContains = [ 'RECAP' ];
+            var finalLineContains = [ 'ok', 'changed','failed','unreachable' ];
             var taskLineContains = [ 'TASK' ];
+            var okLineContains = [ 'ok' ];
+            var changedLineContains = [ 'changed' ];
             var fatalLineContains = [ 'fatal' ];
             var skippingLineContains = [ 'skipping' ];
             var line = _.unique(str.replace(/\W/g, ' ').split(' '));
+
             var isFinalLine = _.intersection( line, finalLineContains ).length===finalLineContains.length;
             var isTaskLine = _.intersection( line, taskLineContains ).length===taskLineContains.length;
             var isFatalLine = _.intersection( line, fatalLineContains ).length===fatalLineContains.length;
             var isSkipLine = _.intersection( line, skippingLineContains ).length===skippingLineContains.length;
+            var isOKLine = _.intersection( line, okLineContains ).length===okLineContains.length;
+            var isChangedLine = _.intersection( line, changedLineContains ).length===changedLineContains.length;
 
             if( isFinalLine ) {
                 if( str.indexOf('failed=0') <0 || str.indexOf('unreachable=0')<0 ) {
@@ -129,6 +134,10 @@ app.controller('ansibleCtrl', [ '$scope', '$resource', function($scope, $resourc
 
             if( isTaskLine ) {
                 lineItems.push({ 'type': 'task', 'display_class': 'list-group-item-info',  'content': str });
+            }
+
+            if( isOKLine || isChangedLine ) {
+                lineItems.push({ 'type': 'line', 'display_class': 'list-group-item-info',  'content': str });
             }
 
             if( isFatalLine ) {
