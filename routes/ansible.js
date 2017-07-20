@@ -28,6 +28,8 @@ Ansible.prototype.check = function(filename, options) {
     var params = ['--check', filename];
     params = extractParams( params, options );
 
+    console.log(params);
+
     const shell = spawn('ansible-playbook', params );
     shell.stdout.on('data', con);
 
@@ -41,7 +43,7 @@ Ansible.prototype.addListener = function(newhandler) {
 
 function extractParams( params, options) {
     if( options && options.tag ) {
-        params = [ '--tags', '"' + options.tag + '"' ].concat( params );
+        params = [ '--tags', options.tag ].concat( params );
     }
 
     return params;
