@@ -14,6 +14,8 @@ var runfile = require('./routes/runfile');
 var checkfile = require('./routes/checkfile');
 var stream = require('./routes/stream');
 
+var basicAuth = require('express-basic-auth');
+
 var hbs = require('hbs');
 
 var app = express();
@@ -30,6 +32,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/resource')));
+
+// Add Authentication
+if( process.env.AUTH_USER && process.env.AUTH_PASSWORD ) {
+  var obj = {};
+  obj[process.env.AUTH_USER] = process.env.AUTH_PASSWORD;
+  app.use(basicAuth({
+      'users': obj,
+      'challenge': true
+  }));
+}
 
 app.use('/', index);
 app.use('/files', listFiles);
