@@ -23,8 +23,10 @@ app.controller('ansibleCtrl', [ '$scope', '$resource', function($scope, $resourc
 
         vm.selectedFile = file;
         vm.selectedFile.active = true;
-        vm.selectedFile.checkOnly = file.name.indexOf('_check')>=0;
-        vm.selectedFile.restartOnly = file.name.indexOf('_restart')>=0;
+        vm.selectedFile.mode = 'normal';
+        vm.selectedFile.mode = file.name.indexOf('_check')>=0?'check':vm.selectedFile.mode;
+        vm.selectedFile.mode = file.name.indexOf('_test')>=0?'test':vm.selectedFile.mode;
+        vm.selectedFile.mode = file.name.indexOf('_restart')>=0?'restart':vm.selectedFile.mode;
 
         api.get({'action': 'getfile', 'filename': file.name },
             function _success( response ) {

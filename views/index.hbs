@@ -95,26 +95,43 @@
                 <div class="vspace-16-sm"></div>
                 <div class="col-sm-5">
                     <div class="panel panel-primary">
+                        
                         <div class="panel-heading">
-                            <h3 class="panel-title"><span ng-bind="selectedFile.name"></span> (TAGS)</h3>
+                            <h3 class="panel-title"><span ng-bind="selectedFile.name"></span> (TAGS) <span ng-bind="selectedFile.mode"></span></h3>
                         </div>
                         <pre ng-bind="selectedFile.comment" ng-if="selectedFile.comment.length>0" style="border-radius:0"></pre>
                         <ul class="list-group" style="margin:0">
-                            <li class="list-group-item" ng-if="selectedFile.restartOnly!==true">
+                            <li class="list-group-item" ng-if="selectedFile.mode==='check'||selectedFile.mode==='normal'">
                                 <span>ALL</span>
-                                <button class="btn btn-xs btn-success pull-right" ng-click="runPlaybook( 'checkfile', selectedFile, null )">Check</button>
-                                {{!-- <button class="btn btn-xs btn-info pull-right" ng-click="runPlaybook( 'runfile', selectedFile, null )" style="margin-right:9px">Execute / Run</button> --}}
-                            </li>
-                            <li class="list-group-item" ng-repeat="item in selectedFile.tags">
-                                <span ng-bind="item"></span>
                                 <button
                                     class="btn btn-xs btn-success pull-right"
-                                    ng-if="selectedFile.restartOnly!==true"
+                                    ng-click="runPlaybook( 'checkfile', selectedFile, null )">Check</button>
+                            </li>
+                            <li class="list-group-item" ng-if="selectedFile.mode==='test'">
+                                <span>ALL</span>
+                                <button
+                                    class="btn btn-xs btn-success pull-right"
+                                    ng-click="runPlaybook( 'runfile', selectedFile, null )">Check</button>
+                            </li>
+
+                            <li class="list-group-item" ng-repeat="item in selectedFile.tags">
+                                <span ng-bind="item"></span>
+                                
+                                <button
+                                    class="btn btn-xs btn-success pull-right"
+                                    ng-if="selectedFile.mode==='test'"
+                                    ng-click="runPlaybook( 'runfile', selectedFile, item )"
+                                    style="margin-right:9px">Check</button>
+
+                                <button
+                                    class="btn btn-xs btn-success pull-right"
+                                    ng-if="selectedFile.mode==='check'||selectedFile.mode==='normal'"
                                     ng-click="runPlaybook( 'checkfile', selectedFile, item )"
                                     >Check</button>
+
                                 <button
                                     class="btn btn-xs btn-info pull-right"
-                                    ng-if="selectedFile.checkOnly!==true"
+                                    ng-if="selectedFile.mode==='restart'||selectedFile.mode==='normal'"
                                     ng-click="runPlaybook( 'runfile', selectedFile, item )"
                                     style="margin-right:9px">Execute / Run</button>
                             </li>
