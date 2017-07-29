@@ -23,11 +23,14 @@ app.controller('ansibleCtrl', [ '$scope', '$resource', function($scope, $resourc
 
         vm.selectedFile = file;
         vm.selectedFile.active = true;
+        vm.selectedFile.checkOnly = file.name.indexOf('_check')>=0;
+        vm.selectedFile.restartOnly = file.name.indexOf('_restart')>=0;
 
         api.get({'action': 'getfile', 'filename': file.name },
             function _success( response ) {
                 if( response && response.content ) {
                     vm.selectedFile.content = response.content;
+                    vm.selectedFile.comment = extractComments(response.content);
                     vm.selectedFile.yml = parseYML(response.content);
                     vm.selectedFile.tags = extractTags(vm.selectedFile.yml);
                     console.log( vm.selectedFile );
@@ -41,6 +44,12 @@ app.controller('ansibleCtrl', [ '$scope', '$resource', function($scope, $resourc
         function parseYML(text) {
             var doc = jsyaml.load(text);
             return doc;
+        }
+
+        function extractComments( text ) {
+            return _.filter(text.split('\n'), function(line){
+                return line.trim().indexOf('#')===0;
+            }).join('\n');
         }
 
         function extractTags( doc ) {
